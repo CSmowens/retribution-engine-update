@@ -1,0 +1,92 @@
+Retribution Engine v1.12 Source Code
+------------------------------------
+
+This package contains the complete source code for the Retribution Engine and tools. It is buildable with Visual C++ 6.0, 7.0, 8.0 and 9.0 (only build files for version 6.0 are included but these can be imported into later versions but I have made build files for visual studio 2010). SOME PARTS are also buildable with Code::Blocks. In order to test the programs you will need to download the game package from the project website here:
+http://sourceforge.net/projects/retribengine/
+
+The source code is licensed under the terms of the GNU General Public License (GPL). See the included file gpl.txt for details.
+
+The source code release includes certain third party libraries for convenience (the engine won't compile without them). Please refer to the readme in the 'third_party' directory for details. The important thing to remember is that these libraries are not a part of the Retribution Engine source code and remain the property of their respective owners!
+
+In addition the game package includes various media files: levels, models, textures, sounds, music, etc. The copyright of these remains with their respective owners, see the game package readme's for details. This media was provided by the owners on the strict understanding that it shall not be used for commercial purposes. If you wish to use the source code for commercial purposes, as allowed by the GPL, you must not use any of this media!
+
+Installation and Configuration
+------------------------------
+
+1. Install the source code. It is recommended to extract it to 'C:\' because this will match the installation directory for the game package, but of course it's up to you where you install it.
+
+2. Install the game package. It is recommended that you leave the installation directory at it's default setting of 'C:\RetribEngine' to match the recommended installation directory for the source code. If you installed the source code somewhere else, point the installer at the RetribEngine directory.
+
+3. Open the project using the build files for your compiler, these can be found in the appropriate subdirectory of RetribEngine\builds. (For all versions of Visual Studio .Net, opening the VC6\retribengine.dsw file will initiate conversion to a 'solution' suitable for use with your compiler.)
+
+4. Visual Studio can't be relied upon to store the correct working directory for debugging. For each program you wish to debug, open the project settings/properties, click on the debug tab and ensure that the working directory is set to '../../../game' (without the quotes)
+Developer Notes
+---------------
+
+This file contains a brain dump of information that might be useful to other developers.
+
+Change History
+--------------
+
+If you make changes to source code it would be appreciated if you update the version history in the file headers and (if you're not using CVS) put comments around the changed code giving your name and date. This will help track changes.
+
+Debugging
+---------
+
+The retrib_mfc program was created to allow debug where this is not possible with the main retrib program. Windows memory management seems to object to the large amount of static memory the game uses. In debug mode, it can randomly fail to create dynamic memory objects. This doesn't occur with retrib_mfc because MFC uses it's own memory management functions. I might have converted the game to use the MFC version but I couldn't work out how to close the game when selecting QUIT on the game menu, any way I tried got an exception! If you know the trick to do this you could convert retrib_mfc to allow fullscreen operation and replace the main program.
+
+File Versions
+-------------
+
+For most saved file formats, a versioning system is used. This has proved to be very useful and should continue to be used. The file has a version number in the header that is read during loading. This version number is then used in the code to assess which values are loaded or ignored. With appropriate defaulting of new parameters this allows full backwards compatibility and also allows simple upgrading of files (by loading the old file and then saving the file in the latest format).
+
+In order to upgrade file formats you simply need to increment the file version stored in the save code and then:
+a) for new parameters add them into the save code and then add them into the read code and surround them with an 'if (version >= x)' statement where x is the new file version number. Add safe/appropriate default values in the read code if required.
+b) for old parameters no longer required remove them from the save code and surround them with an 'if (version < x)' statement in the read code where x is the new file version number.
+
+This extra code is well worth the effort!!
+
+Lighting
+--------
+
+My dream was to implement unified lighting (similar to Doom 3) but I never got chance to do it. This would get rid of the distinctions between lightmapped panels and vertex lit objects and hopefully allow shadows from both objects and panels to be generated in the same way. 
+
+Multiplayer
+-----------
+
+Multiplayer support was in progress at the time development stopped. You will find much of the required code is in place, the main things that were missing were weapon support (hit detection, firing state data, etc) and re-spawning. Then a lot of the code to provide 'polish' such as multiplayer game menus, displaying results, etc was missing.
+
+Survival levels (prefixed SV-) can be used to test multiplayer features.
+
+Terrain
+-------
+
+Terrain needs a big re-write. It was originally based on a dynamic quad-tree rendering algorithm which is great for flight sims but it didn't work so well for the levels because the buildings are fixed and the ground height varied too much. So I made the quad-tree fixed based on slopes and whether buildings were nearby which works but is inefficient and makes it hard to have more than one texture. This needs re-writing to suit the latest programmable hardware, this would allow better texturing, vegetation and faster rendering speed.
+
+
+
+Known Problems
+--------------
+
+In VC7 onward, the level and model editors were found to suffer multiple assertion failures when run in the debugger, the release versions worked fine. This was traced to the way some DDX objects were accessed which worked fine in VC6 but didn't for the later versions. This is now believed to be fixed but it is possible some rarely used lines of code slipped through the net. If you find any please fix them or inform the author.
+
+In VC9, if the model editor is run in the debugger and an attempt is made to open a file the program terminates with no error. The reason for this is unknown.
+
+Legal Stuff (applies to every program in this release)
+------------------------------------------------------
+
+Copyright (C) 1999-2009 A.P.Gardner, P.Moxon et al
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
